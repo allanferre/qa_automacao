@@ -1,25 +1,25 @@
 import { Given, When, Then } from 'cypress-cucumber-preprocessor/steps'
 
+// que eu acesso a URL "https://jsonplaceholder.typicode.com/guide/"
 Given('que eu acesso a URL {string}', (url) => {
   cy.visit(url)
 })
 
+// eu acessar o menu "Guide"
 When('eu acessar o menu {string}', (menu) => {
   cy.contains(menu).click()
-  cy.writeFile('cypress/fixtures/message.txt', 'Hello3')
 })
 
+// eu navegar até o link "/albums/1/photos" e abri-lo
 And('eu navegar até o link {string} e abri-lo', (link) => {
-  cy.writeFile('cypress/fixtures/message.txt', 'Hello4')
   cy.contains('a', link).click({ force: true })
-  cy.writeFile('cypress/fixtures/message.txt', 'Hello5')
 })
 
+// eu capturo os dados exibidos em tela e salvo num array JSON
 Then('eu capturo os dados exibidos em tela e salvo num array JSON', () => {  
   cy.request('https://jsonplaceholder.typicode.com/albums/1/photos').then((response) => {
     expect(response.status).to.eq(200)
     const data = response.body
-  cy.writeFile('cypress/fixtures/message.txt', 'Hello6')
   const dataArray = data.map(item => ({
     albumId: item.albumId,
     id: item.id,
@@ -27,11 +27,11 @@ Then('eu capturo os dados exibidos em tela e salvo num array JSON', () => {
     url: item.url,
     thumbnailUrl: item.thumbnailUrl
   }))
-  cy.writeFile('cypress/fixtures/message.txt', 'Hello7')
   cy.writeFile('cypress/fixtures/example.json', dataArray)
-})
+  })
 })
 
+// eu valido os dados do objeto com id = 6
 And('eu valido os dados do objeto com id = {int}', (id) => {
    // Carrega o arquivo JSON
    cy.fixture('example.json').then((data) => {
@@ -52,12 +52,13 @@ And('eu valido os dados do objeto com id = {int}', (id) => {
   })
 })
 
-
+// eu salvo uma evidência do teste
 And('eu salvo uma evidência do teste', () => {
-  //cy.screenshot('evidencia-pagina-toda')
+  // aqui salva um report da página toda
+  cy.screenshot('evidencia-pagina-toda')
   //teste a existência
   cy.contains('"id": 6').should('exist');
-  // Verificar se o elemento existe
+  // Verificar se o elemento existe, se sim cria o report da pagina até o elemento
   cy.contains(/"id": 6/).then($el => {
     if ($el.length > 0) {
       const rect = $el[0].getBoundingClientRect();
@@ -71,7 +72,7 @@ And('eu salvo uma evidência do teste', () => {
         }
       })
     } else {
-      // Elemento não encontrado
+      // Caso não ache o elemento
       cy.log('Elemento com "id": 6 não encontrado');
     }
   });
