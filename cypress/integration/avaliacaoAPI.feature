@@ -21,4 +21,5 @@ Feature: Testar API do JSONPlaceholder
       | updated@test.com  | -23.55  | -46.63   |
     Then a resposta deve ter status 200
     And os campos "email", "lat" e "lng" devem estar atualizados
+    And eu salvo uma evidência do teste da api "https://jsonplaceholder.typicode.com/users/5"
 

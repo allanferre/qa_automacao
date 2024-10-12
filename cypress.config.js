@@ -11,6 +11,7 @@ module.exports = defineConfig({
     screenshotsFolder: 'cypress/reports/screenshots',
     videosFolder: 'cypress/reports/videos',
     chromeWebSecurity: false,
-    experimentalModifyObstructiveThirdPartyCode: true
+    experimentalModifyObstructiveThirdPartyCode: true,
+    testIsolation: false
   }
 });

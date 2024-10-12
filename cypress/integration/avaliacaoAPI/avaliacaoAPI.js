@@ -1,6 +1,4 @@
 import { Given, When, Then, And } from 'cypress-cucumber-preprocessor/steps';
-import './apiDisponivel';
-
 
 //-------------------------------------------------------------------------- GET -------------------------------------------------------------------------------------------
 // Verifica se a API comments "https://jsonplaceholder.typicode.com/comments" está disponível
@@ -111,11 +109,26 @@ Then('a resposta deve ter status {int}', (statusCode) => {
 });
 
 // os campos "email", "lat" e "lng" devem estar atualizados conforme a requição
-Then('os campos {string}, {string} e {string} devem estar atualizados', (field1, field2, field3) => {
+And('os campos {string}, {string} e {string} devem estar atualizados', (field1, field2, field3) => {
   cy.get('@apiResponse').its('body').then(body => {
     expect(body.email).to.eq('updated@test.com');
     expect(body.address.geo.lat).to.eq('-23.55');
     expect(body.address.geo.lng).to.eq('-46.63');
-  });
-
+  })
 });
+
+// eu salvo uma evidência do teste da api "https://jsonplaceholder.typicode.com/users/5"
+And('eu salvo uma evidência do teste da api {string}', (apiUrl) => {
+  cy.request(apiUrl).then(response => {
+  // Salvar a resposta em um elemento da página para capturar o screenshot
+  // aqui é necessário salvar a resposta JSON em elemento html pra ser possível salvar a evidência
+  cy.document().then(doc => {
+    const pre = doc.createElement('pre');
+    pre.textContent = JSON.stringify(response.body, null, 2);
+    doc.body.appendChild(pre);
+
+    // Tirar o screenshot da resposta
+    cy.get('pre').screenshot('evidencia-elemento-id5');
+  })
+  })
+});  
